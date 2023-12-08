@@ -1,0 +1,43 @@
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    height: 100%;
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+}
+
+#catList {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+#catList > li {
+    border: 1px solid salmon;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+}
+
+#catList > li > img {
+    width: 250px;
+    height: 250px;
+}
+
+.like_btn {
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+    cursor: pointer;
+}
