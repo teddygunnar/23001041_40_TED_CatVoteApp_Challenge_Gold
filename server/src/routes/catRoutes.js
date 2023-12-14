@@ -4,6 +4,5 @@ const catsController = require("../controller/catController");
 
 //define route
 router.get("/", catsController.getLikedCat);
-// router.posh("/insert", catsController.insertLikedCat);
 
 module.exports = router;

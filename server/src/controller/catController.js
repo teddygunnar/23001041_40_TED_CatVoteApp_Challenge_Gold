@@ -1,8 +1,10 @@
 const Cats = require("../models/cats");
+const { isAuthenticated } = require("../utils/utils");
 
 exports.getLikedCat = async (req, res) => {
+  const { userId } = await isAuthenticated(req?.headers?.authorization);
   try {
-    const cats = await Cats.getCats();
+    const cats = await Cats.getCats(userId);
     res.status(200).json({
       status: 200,
       payload: cats,
@@ -15,8 +17,7 @@ exports.getLikedCat = async (req, res) => {
 
 exports.insertLikedCat = async (req, res) => {
   try {
-    const cat = await Cats.insertCat(body);
-    console.log(cat);
+    await Cats.insertCat(body);
   } catch (error) {
     console.log(error);
   }

@@ -1,17 +1,8 @@
 const knex = require("../../config/db");
 
 class Likes {
-  // some create and delete stuff in here for users who records their likes
-  // will return after the strucutre of cats is solid
-
-  static async getLikesById() {
-    return knex("likes").select("*");
-  }
-
-  static async likedCat(res) {
-    const userId = res.userId;
-    const imageId = res.imageId;
-
+  static async likeCat(res) {
+    const { userId, imageId } = res;
     // validate if the user is already liked the cat if it has, the user is unable to like it again.
     const isUserExist = await knex("users")
       .select("userId")
@@ -38,18 +29,41 @@ class Likes {
       return { message: "User already liked the image", status: 409 };
     }
 
-    const response = await knex("likes")
-      .insert({
-        userId,
-        imageId,
-        guestId: null,
-        createdAt: knex.fn.now(),
-      })
-      .returning("*");
+    const response = await knex("likes").insert({
+      userId,
+      imageId,
+      guestId: null,
+      createdAt: knex.fn.now(),
+    });
 
     if (response) {
       return { message: "SUCCESS", status: 200 };
     }
+  }
+
+  static async unlikeCat(res) {
+    const { userId, imageId } = res;
+    if (userId && imageId) {
+      const res = await knex("likes")
+        .where({ imageId: imageId, userId: userId })
+        .del();
+      return { message: "Deleted", status: 200, data: res };
+    }
+
+    return { message: "Delete Failed", status: 404 };
+  }
+
+  static async getUpdatedLikeCount(imageId, userId) {
+    const { rows } = await knex.raw(
+      `select c."imageId", c."imageUrl",
+      count(l."userId")::int as "numberOfLikes",
+      bool_or(l."userId" = ${userId}) AS "userLiked"
+      from cats c right join likes l on c."imageId" = l."imageId"
+      where c."imageId" = ${imageId}
+      group by c."imageId"`
+    );
+
+    return rows[0];
   }
 }
 

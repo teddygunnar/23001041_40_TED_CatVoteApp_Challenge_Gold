@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const WebSocket = require("ws");
 
 async function hashPassword(pass) {
   try {
@@ -21,17 +22,35 @@ async function comparePasssword(inputPass, hashedPass) {
 }
 
 async function isAuthenticated(token) {
-  const _token = token.split(" ")[1];
-  try {
-    const decoded = jwt.verify(_token, "shhhhh");
-    if (decoded) {
-      return decoded;
+  if (token) {
+    const _token = token.split(" ")[1];
+    try {
+      const decoded = jwt.verify(_token, "shhhhh");
+      if (decoded) {
+        return decoded;
+      }
+    } catch (error) {
+      // console.log(error);
+      console.log("Token Expired");
+      return false;
     }
-  } catch (error) {
-    // console.log(error);
-    console.log("Token Expired");
-    return false;
   }
+  return false;
 }
 
-module.exports = { comparePasssword, hashPassword, isAuthenticated };
+function socketBroadcast(ws, data) {
+  ws.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(data));
+    }
+  });
+}
+
+module.exports = socketBroadcast;
+
+module.exports = {
+  comparePasssword,
+  hashPassword,
+  isAuthenticated,
+  socketBroadcast,
+};

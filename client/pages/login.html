@@ -32,6 +32,7 @@
           }
         );
         sessionStorage.setItem("authToken", data.data.authToken);
+        sessionStorage.setItem("user", JSON.stringify(data.data));
         window.location.href = "/app/home";
       } catch (error) {
         const { response } = error;
