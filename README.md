@@ -1,6 +1,6 @@
 # Disclaimer
 
-This GitHub Repository is solely for submitting the gold challenge in BINAR Bootcamp Wave 40. Any claims regarding the assets, content, or any other elements of this repository are purely coincidental.
+This GitHub Repository is created solely for submitting the gold challenge in BINAR Bootcamp Wave 40. Any claims regarding the assets, content, or any other elements of this repository are purely coincidental. The project utilizes the Open Source API provided by [TheCatAPI](https://thecatapi.com/). Special thanks to them for their great contribution.
 
 # Getting Started
 
