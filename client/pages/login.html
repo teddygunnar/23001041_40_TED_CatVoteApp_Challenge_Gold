@@ -5,38 +5,153 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
   </head>
+  <link rel="stylesheet" href="../styles/login.css" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sofia+Sans:ital,wght@0,1;0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;0,1000;1,1;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900;1,1000&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
   <body>
-    <form id="loginForm" onsubmit="return onSubmitForm(event)">
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" required />
+    <div class="login-form">
+      <form id="loginForm" onsubmit="return onSubmitForm(event)">
+        <div class="left-side">
+          <div class="login-sidebar-container">
+            <p id="login-tab" class="active">Login</p>
+            <p id="register-tab">Register</p>
+          </div>
+        </div>
 
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required />
+        <div class="right-side">
+          <div class="login-title">
+            <p>Welcome to</p>
+            <h1 class="login-form-title">
+              <i class="fa-cat fa-solid"></i> Cat App
+            </h1>
+          </div>
+          <div class="input-container">
+            <div class="username-container">
+              <i class="fa-solid fa-user"></i>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                required
+                placeholder="Username"
+                class="username-input input"
+              />
+            </div>
 
-      <button type="submit" id="loginButton">Login</button>
-    </form>
+            <div class="password-container">
+              <i class="fa-solid fa-lock"></i>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                required
+                placeholder="Password"
+                class="password-input input"
+              />
+            </div>
+            <div class="login-btn-container">
+              <button type="submit" id="login-btn">Login</button>
+              <button type="button" id="forgot-btn">Forgot Password?</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
   </body>
 
   <script defer>
+    const loginTab = document.getElementById("login-tab");
+    const registerTab = document.getElementById("register-tab");
+    const loginBtn = document.getElementById("login-btn");
+    const forgotBtn = document.getElementById("forgot-btn");
+
+    const BASE_URL = "http://127.0.0.1:3005/api/v1";
+
+    function handleTab(nav) {
+      if (!nav) return;
+      const _nav = nav.toLowerCase();
+
+      switch (nav) {
+        case "login":
+          loginTab.classList.add("active");
+          registerTab.classList.remove("active");
+          loginBtn.textContent = "Login";
+          forgotBtn.style.visibility = '';
+          break;
+        default:
+          registerTab.classList.add("active");
+          loginTab.classList.remove("active");
+          loginBtn.textContent = "Register";
+          forgotBtn.style.visibility = 'hidden';
+          break;
+      }
+    }
+
+    loginTab.onclick = () => {
+      handleTab("login");
+    };
+
+    registerTab.onclick = () => {
+      handleTab("register");
+    };
+
     async function onSubmitForm(e) {
       e.preventDefault();
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
+      const username = document.getElementById("username");
+      const password = document.getElementById("password");
 
-      try {
-        const { status, data } = await axios.post(
-          "http://127.0.0.1:3005/api/v1/auth/login",
-          {
-            username,
-            password,
+      const isLogin = loginBtn.textContent.toLowerCase() === "login";
+
+      if (isLogin) {
+        try {
+          const { status, data } = await axios.post(BASE_URL + "/auth/login", {
+            username: username.value,
+            password: password.value,
+          });
+          sessionStorage.setItem("user", JSON.stringify(data.data));
+          window.location.href = "/app/home";
+        } catch (error) {
+          const { response } = error;
+          alert(response.data.message);
+        }
+      } else {
+        try {
+          const {
+            status,
+            data: { message },
+          } = await axios.post(BASE_URL + "/users/create", {
+            username: username.value,
+            password: password.value,
+          });
+
+          if (status === 200) {
+            alert(message);
           }
-        );
-        sessionStorage.setItem("authToken", data.data.authToken);
-        sessionStorage.setItem("user", JSON.stringify(data.data));
-        window.location.href = "/app/home";
-      } catch (error) {
-        const { response } = error;
-        alert(response.data.message);
+
+          handleTab("login");
+          username.value = "";
+          password.value = "";
+        } catch (error) {
+          console.error(error);
+          const { response } = error;
+          alert(response.data.error);
+        }
       }
     }
   </script>

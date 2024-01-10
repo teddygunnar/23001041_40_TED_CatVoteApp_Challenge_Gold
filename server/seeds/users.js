@@ -1,3 +1,5 @@
+const { hashPassword } = require("../src/utils/utils");
+
 /**
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
@@ -18,7 +20,13 @@ exports.seed = async function (knex) {
   await knex("users").insert([
     {
       username: "danang",
-      password: "test1234",
+      password: await hashPassword("test1234"),
+      createdAt: knex.fn.now(),
+      updatedAt: knex.fn.now(),
+    },
+    {
+      username: "yopi",
+      password: await hashPassword("test1234"),
       createdAt: knex.fn.now(),
       updatedAt: knex.fn.now(),
     },

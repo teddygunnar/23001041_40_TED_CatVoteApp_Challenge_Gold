@@ -43,8 +43,9 @@ exports.createUser = async (req, res) => {
     if (response?.message) {
       return res.send(response);
     }
+
     res.send({
-      message: "User Added",
+      message: `User with username ${response[0]?.username} has bee created`,
       status: 200,
     });
   } catch (error) {

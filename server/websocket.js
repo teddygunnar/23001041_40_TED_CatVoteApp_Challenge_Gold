@@ -13,10 +13,10 @@ const createWebSocketServer = () => {
     ws.on("close", () => {
       console.log("Client disconnected");
 
-      setTimeout(() => {
-        wss.close();
-        createWebSocketServer();
-      }, 2000);
+      // wss.close();
+      // setTimeout(() => {
+      //   createWebSocketServer();
+      // }, 2000);
     });
   });
 

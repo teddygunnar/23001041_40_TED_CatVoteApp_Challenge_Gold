@@ -4,7 +4,7 @@ class Cats {
   // Will make a lot from this, probably with no update function
   static async getCats(userId) {
     const { rows } = await knex.raw(`
-    select c."imageId", c."imageUrl",
+    select c."imageId", c."imageUrl", MIN(l."createdAt") as "createdAt",
     count(l."userId")::int as "numberOfLikes",
     bool_or(l."userId" = ${userId}) AS "userLiked"
     from cats c right join likes l on c."imageId" = l."imageId" 

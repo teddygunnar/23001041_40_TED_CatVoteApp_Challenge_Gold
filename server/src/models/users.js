@@ -10,6 +10,7 @@ class User {
   }
 
   static async createUser(user) {
+    console.log(user);
     const isUsernameTaken = await knex("users")
       .where({ username: user.username })
       .first();

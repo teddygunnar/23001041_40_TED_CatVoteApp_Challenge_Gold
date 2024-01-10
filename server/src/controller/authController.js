@@ -33,5 +33,8 @@ exports.loginUser = async (req, res) => {
   } catch (error) {
     console.log(error);
     console.error({ message: "Failed to authorize, please try again later" });
+    res.status(500).send({
+      message: "Something wrong with the server please try again later",
+    });
   }
 };
