@@ -67,7 +67,6 @@
             </div>
             <div class="login-btn-container">
               <button type="submit" id="login-btn">Login</button>
-              <button type="button" id="forgot-btn">Forgot Password?</button>
             </div>
           </div>
         </div>
@@ -79,7 +78,6 @@
     const loginTab = document.getElementById("login-tab");
     const registerTab = document.getElementById("register-tab");
     const loginBtn = document.getElementById("login-btn");
-    const forgotBtn = document.getElementById("forgot-btn");
 
     const BASE_URL = "http://127.0.0.1:3005/api/v1";
 
@@ -92,13 +90,11 @@
           loginTab.classList.add("active");
           registerTab.classList.remove("active");
           loginBtn.textContent = "Login";
-          forgotBtn.style.visibility = '';
           break;
         default:
           registerTab.classList.add("active");
           loginTab.classList.remove("active");
           loginBtn.textContent = "Register";
-          forgotBtn.style.visibility = 'hidden';
           break;
       }
     }

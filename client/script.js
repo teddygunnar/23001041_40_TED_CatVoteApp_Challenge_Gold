@@ -348,6 +348,7 @@ async function index() {
             imageUrl: val.imageUrl,
             numberOfLikes: 1,
             userLiked: val.userId === userId ? true : false,
+            createdAt: new Date().toISOString(),
           });
         } else {
           cats[i] = {
@@ -355,16 +356,22 @@ async function index() {
             imageId: val.imageId,
             numberOfLikes: 1,
             userLiked: val.userId === userId ? true : false,
+            createdAt: new Date().toISOString(),
           };
           favCats.push(cats[i]);
         }
         cats.splice(i, 1);
+        Toastify({
+          text: "Image added to your favorites",
+          duration: 3000,
+        }).showToast();
         break;
       default:
         const ind = favCats.findIndex((o) => o.imageId === val.imageId);
         favCats.splice(ind, 1);
         break;
     }
+    favCats.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     showList({ favCats, cats });
   }
 

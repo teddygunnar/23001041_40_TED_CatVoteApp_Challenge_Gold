@@ -21,7 +21,7 @@ exports.likeCat = async (req, res) => {
       imageId: imageId ? imageId : cat[0].imageId,
       userId,
     });
-    if (status === 200) {
+    if (status === 200 && imageId) {
       const count = await Likes.getUpdatedLikeCount(imageId, userId);
       socketBroadcast(server, { action: "update", ...count, userId });
       res.status(200).json({ status, ...response });
